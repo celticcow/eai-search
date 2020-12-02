@@ -17,9 +17,10 @@ Greg_Dunlap / CelticCow
 """
 
 def search4grp(mds, cma, eai):
-    debug = 1
-    endl = "\n"
-    print("in search4grp")
+    debug = 0
+    endl = "<br>"
+    if(debug == 1):
+        print("in search4grp")
 
     user     = "roapi"
     password = "1qazxsw2"
@@ -29,9 +30,40 @@ def search4grp(mds, cma, eai):
     if(debug == 1):
         print("session id : " + sid, end=endl)
     
+    check_name = {
+        "order" : [
+            {
+                "ASC" : "name"
+            }
+        ],
+        "type" : "group",
+        "in" : ["name", eai]
+    }
 
+    name_result = apifunctions.api_call(mds, "show-objects", check_name, sid)
 
+    if(debug == 1):
+        print("-------------------------------------------")
+        print(name_result, end=endl)
 
+        print(name_result['total'], end=endl)
+    
+    for i in range(name_result['total']):
+        print("Group Found : ", end="")
+        print(name_result['objects'][i]['name'], end=endl)
+
+        show_group_json = {"name" : name_result['objects'][i]['name']}
+
+        group_contents = apifunctions.api_call(mds, "show-group", show_group_json, sid)
+
+        if(debug == 1):
+            print("*************************************", end=endl)
+            print(group_contents, end=endl)
+
+        print("contents of group: ", end=endl)
+        for j in range(len(group_contents['members'])):
+            print(group_contents['members'][j]['name'], end=" ")
+            print(group_contents['members'][j]['type'], end=endl)
 
     ##don't need publish
     time.sleep(5)
@@ -42,18 +74,35 @@ def search4grp(mds, cma, eai):
 
 def main():
     debug = 1
-    endl = "\n"
+    endl = "<br>"
 
-    print("in main", end=endl)
+    form = cgi.FieldStorage()
 
+    eai = form.getvalue('eai2search')
 
     mds      = "146.18.96.16"
     cma      = "146.18.96.25"
     
 
-    eai = "123456"
+    #eai = "123456"
+
+    ## html header and config data dump
+    print ("Content-type:text/html\r\n\r\n")
+    print ("<html>")
+    print ("<head>")
+    print ("<title>EAI Search Results</title>")
+    print ("</head>")
+    print ("<body>")
+    print("EAI Search results<br><br>")
 
     search4grp(mds, cma, eai)
+
+    print("------- end of program -------", end=endl)
+    print("<br><br>")
+    print("</body>")
+    print("</html>")
+
+
 
 if __name__ == "__main__":
     main()
