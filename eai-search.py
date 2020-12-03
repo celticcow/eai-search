@@ -80,8 +80,9 @@ def main():
 
     eai = form.getvalue('eai2search')
 
-    mds      = "146.18.96.16"
-    cma      = "146.18.96.25"
+    mds      = "204.135.121.150"
+    cma1     = "204.135.121.151"
+    cma5     = "204.135.121.155"
     
 
     #eai = "123456"
@@ -95,7 +96,13 @@ def main():
     print ("<body>")
     print("EAI Search results<br><br>")
 
-    search4grp(mds, cma, eai)
+    print("Prod CMA Search", end=endl)
+    search4grp(mds, cma1, eai)
+
+    print("<br><br><br>")
+
+    print("DEV CMA Search", end=endl)
+    search4grp(mds, cma5, eai)
 
     print("------- end of program -------", end=endl)
     print("<br><br>")
